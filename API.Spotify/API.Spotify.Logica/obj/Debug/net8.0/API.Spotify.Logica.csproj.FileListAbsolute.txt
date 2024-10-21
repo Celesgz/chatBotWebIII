@@ -1,0 +1,15 @@
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\bin\Debug\net8.0\API.Spotify.Logica.deps.json
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\bin\Debug\net8.0\API.Spotify.Logica.dll
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\bin\Debug\net8.0\API.Spotify.Logica.pdb
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spotify.Logica.GeneratedMSBuildEditorConfig.editorconfig
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spotify.Logica.AssemblyInfoInputs.cache
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spotify.Logica.AssemblyInfo.cs
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spotify.Logica.csproj.CoreCompileInputs.cache
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spotify.Logica.dll
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\refint\API.Spotify.Logica.dll
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spotify.Logica.pdb
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\ref\API.Spotify.Logica.dll
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\bin\Debug\net8.0\API.Spotify.Entidades.dll
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\bin\Debug\net8.0\API.Spotify.Entidades.pdb
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spotify.Logica.csproj.AssemblyReference.cache
+D:\SSD Secundario\Desktop\API Spotify\API.Spotify\API.Spotify.Logica\obj\Debug\net8.0\API.Spot.34FC486D.Up2Date
