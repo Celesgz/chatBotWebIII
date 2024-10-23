@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\API.Spotify.EF.Data\API.Spotify.EF.Data.csproj" />
     <ProjectReference Include="..\API.Spotify.Entidades\API.Spotify.Entidades.csproj" />
     <ProjectReference Include="..\API.Spotify.Logica\API.Spotify.Logica.csproj" />
   </ItemGroup>
