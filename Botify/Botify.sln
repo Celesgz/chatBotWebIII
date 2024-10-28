@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Web", "Botify.Web\Botify.Web.csproj", "{758A50FD-3F6B-4CFB-9AE0-D5CD9DE4FA34}"
+	ProjectSection(ProjectDependencies) = postProject
+		{24BC7984-1536-4255-A8A9-2F8E8BB5BD37} = {24BC7984-1536-4255-A8A9-2F8E8BB5BD37}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Logica", "Botify.Logica\Botify.Logica.csproj", "{AE70CD08-7A1B-4AE2-B7ED-6397CAB5CA87}"
 EndProject
