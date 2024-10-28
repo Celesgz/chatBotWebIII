@@ -1,8 +1,10 @@
-﻿using API.Spotify.EF.Data.EF;
-using API.Spotify.Logica;
+﻿using Botify.Data;
+using Botify.Logica;
 using API.Spotify.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Botify.Logica;
+using Botify.Data.EF;
 
 namespace API.Spotify.Web.Controllers
 {

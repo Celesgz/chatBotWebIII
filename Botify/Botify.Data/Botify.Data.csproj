@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Botify.Entidades\Botify.Entidades.csproj" />
-    <ProjectReference Include="..\Botify.Logica\Botify.Logica.csproj" />
   </ItemGroup>
 
 </Project>

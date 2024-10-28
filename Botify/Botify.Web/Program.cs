@@ -1,5 +1,8 @@
+using Botify.Data.EF;
 using Botify.Entidades;
 using Botify.Logica;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -9,25 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<ITokenLogica, TokenLogica>();
+builder.Services.AddScoped<ITokenLogica, TokenLogica>();
 builder.Services.Configure<SpotifyConfig>(builder.Configuration.GetSection("Spotify"));
 builder.Services.AddScoped<BotifyContext>();
 builder.Services.AddScoped<IUsuariosLogica, UsuariosLogica>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Usuarios/IngresarSesion"; // Ruta a la página de inicio de sesión
+    options.LoginPath = "/Usuarios/IngresarSesion";
 });
-
-builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.Configure<SpotifyConfig>(builder.Configuration.GetSection("Spotify"));
-builder.Services.AddScoped<ITokenLogica, TokenLogica>();
-builder.Services.AddScoped<BotifyContext>();
-builder.Services.AddScoped<IUsuariosLogica, UsuariosLogica>();
-builder.Services.AddScoped<AuthService>();
 
 // Configuración de autenticación (JWT y Cookies)
 var jwtSettings = builder.Configuration.GetSection("Jwt");

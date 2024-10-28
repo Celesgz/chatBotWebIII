@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
-using API.Spotify.EF.Data.EF;
+using Botify.Data.EF;
 using Microsoft.EntityFrameworkCore;
 
 public class AuthService

@@ -1,11 +1,12 @@
-﻿using API.Spotify.EF.Data.EF;
+﻿
+using Botify.Data.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace API.Spotify.Logica
+namespace Botify.Logica
 {
     public interface IUsuariosLogica
     {
