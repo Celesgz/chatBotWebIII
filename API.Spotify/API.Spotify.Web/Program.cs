@@ -1,6 +1,12 @@
+using API.Spotify.EF.Data.EF;
 using API.Spotify.Entidades;
 using API.Spotify.Logica;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +14,58 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ITokenLogica, TokenLogica>();
 builder.Services.Configure<SpotifyConfig>(builder.Configuration.GetSection("Spotify"));
-builder.Services.AddScoped<ITokenLogica, TokenLogica>();
+builder.Services.AddScoped<BotifyContext>();
+builder.Services.AddScoped<IUsuariosLogica, UsuariosLogica>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Usuarios/IngresarSesion"; // Ruta a la página de inicio de sesión
+});
 
+builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.Configure<SpotifyConfig>(builder.Configuration.GetSection("Spotify"));
+builder.Services.AddScoped<ITokenLogica, TokenLogica>();
+builder.Services.AddScoped<BotifyContext>();
+builder.Services.AddScoped<IUsuariosLogica, UsuariosLogica>();
+builder.Services.AddScoped<AuthService>();
+
+// Configuración de autenticación (JWT y Cookies)
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+    };
+})
+.AddCookie("CookieAuth", options =>
+{
+    options.Cookie.Name = "AuthToken";
+    options.LoginPath = "/Usuarios/IniciarSesion";  // Ruta de login
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = context =>
+        {
+            context.Response.Redirect("/Usuarios/IniciarSesion");
+            return Task.CompletedTask;
+        }
+    };
+});
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -26,6 +82,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
