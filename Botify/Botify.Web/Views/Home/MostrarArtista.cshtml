@@ -1,0 +1,42 @@
+﻿@model Botify.Entidades.Artista
+
+@{
+    ViewData["Title"] = "Mostrar Artista";
+}
+
+<h1>@Model.Name</h1>
+
+<p><strong>Id:</strong> @Model.Id</p>
+<p><strong>Popularidad:</strong> @Model.Popularity</p>
+
+<p>
+    <strong>URL Spotify:</strong>
+    <a href="@Model.External_urls.Spotify" target="_blank">Ver en Spotify</a>
+</p>
+
+<p><strong>Href:</strong> @Model.Href</p>
+<p><strong>URI:</strong> @Model.Uri</p>
+
+@if (Model.Images != null && Model.Images.Any())
+{
+    <h3>Imágenes:</h3>
+    @foreach (var imagen in Model.Images)
+    {
+        <img src="@imagen.Url" alt="Imagen del artista" height="160" />
+    }
+}
+
+<p><strong>Seguidores:</strong> @Model.Followers.Total</p>
+
+@if (Model.Genres != null && Model.Genres.Any())
+{
+    <p><strong>Géneros:</strong> @string.Join(", ", Model.Genres)</p>
+}
+
+<p><strong>Tipo:</strong> @Model.Type</p>
+
+
+
+
+
+
