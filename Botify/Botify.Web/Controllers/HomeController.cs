@@ -1,12 +1,12 @@
-using API.Spotify.Entidades;
-using API.Spotify.Logica;
-using API.Spotify.Web.Models;
+using Botify.Entidades;
+using Botify.Logica;
+using Botify.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace API.Spotify.Web.Controllers
+namespace Botify.Web.Controllers
 {
     public class HomeController : Controller
     {

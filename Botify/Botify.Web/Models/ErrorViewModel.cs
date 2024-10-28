@@ -1,4 +1,4 @@
-namespace API.Spotify.Web.Models
+namespace Botify.Web.Models
 {
     public class ErrorViewModel
     {

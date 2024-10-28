@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Botify.Data.EF;
 
-namespace API.Spotify.EF.Data.EF;
+namespace Botify.Data.EF;
 
 public partial class BotifyContext : DbContext
 {

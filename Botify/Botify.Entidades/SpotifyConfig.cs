@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace API.Spotify.Entidades
+namespace Botify.Entidades
 {
     public class SpotifyConfig
     {

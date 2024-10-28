@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\API.Spotify.EF.Data\API.Spotify.EF.Data.csproj" />
-    <ProjectReference Include="..\API.Spotify.Entidades\API.Spotify.Entidades.csproj" />
-    <ProjectReference Include="..\API.Spotify.Logica\API.Spotify.Logica.csproj" />
+    <ProjectReference Include="..\Botify.Data\Botify.Data.csproj" />
+    <ProjectReference Include="..\Botify.Entidades\Botify.Entidades.csproj" />
+    <ProjectReference Include="..\Botify.Logica\Botify.Logica.csproj" />
   </ItemGroup>
 
 </Project>

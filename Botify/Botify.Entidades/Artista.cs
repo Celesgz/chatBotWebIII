@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace API.Spotify.Entidades
+namespace Botify.Entidades
 {
     public class Artista
     {

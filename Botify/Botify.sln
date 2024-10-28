@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Spotify.Web", "API.Spotify.Web\API.Spotify.Web.csproj", "{758A50FD-3F6B-4CFB-9AE0-D5CD9DE4FA34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Web", "Botify.Web\Botify.Web.csproj", "{758A50FD-3F6B-4CFB-9AE0-D5CD9DE4FA34}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Spotify.Logica", "API.Spotify.Logica\API.Spotify.Logica.csproj", "{AE70CD08-7A1B-4AE2-B7ED-6397CAB5CA87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Logica", "Botify.Logica\Botify.Logica.csproj", "{AE70CD08-7A1B-4AE2-B7ED-6397CAB5CA87}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Spotify.Entidades", "API.Spotify.Entidades\API.Spotify.Entidades.csproj", "{ABC5311E-5D3E-49A4-8A7D-8441F05CDEB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Entidades", "Botify.Entidades\Botify.Entidades.csproj", "{ABC5311E-5D3E-49A4-8A7D-8441F05CDEB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Spotify.EF.Data", "API.Spotify.EF.Data\API.Spotify.EF.Data.csproj", "{1C081521-FAB7-4F4D-A3D7-D9595CA0DF85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Data", "Botify.Data\Botify.Data.csproj", "{1C081521-FAB7-4F4D-A3D7-D9595CA0DF85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

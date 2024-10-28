@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace API.Spotify.EF.Data.EF;
+namespace Botify.Data.EF;
 
 public partial class Usuario
 {

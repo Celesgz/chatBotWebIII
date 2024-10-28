@@ -1,4 +1,4 @@
-﻿namespace API.Spotify.Entidades
+﻿namespace Botify.Entidades
 {
     public class SpotifyToken
     {

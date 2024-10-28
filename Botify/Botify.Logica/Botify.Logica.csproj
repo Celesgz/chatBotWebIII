@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\API.Spotify.Entidades\API.Spotify.Entidades.csproj" />
+    <ProjectReference Include="..\Botify.Entidades\Botify.Entidades.csproj" />
   </ItemGroup>
 
 </Project>

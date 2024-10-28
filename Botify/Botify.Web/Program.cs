@@ -1,5 +1,5 @@
-using API.Spotify.Entidades;
-using API.Spotify.Logica;
+using Botify.Entidades;
+using Botify.Logica;
 using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
