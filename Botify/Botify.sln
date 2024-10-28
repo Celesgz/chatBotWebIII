@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Entidades", "Botify.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Data", "Botify.Data\Botify.Data.csproj", "{1C081521-FAB7-4F4D-A3D7-D9595CA0DF85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Bot", "..\..\csharp_dotnetcore\19.custom-dialogs\Botify.Bot.csproj", "{24BC7984-1536-4255-A8A9-2F8E8BB5BD37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Botify.Bot", "Botify.Bot\Botify.Bot.csproj", "{24BC7984-1536-4255-A8A9-2F8E8BB5BD37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
