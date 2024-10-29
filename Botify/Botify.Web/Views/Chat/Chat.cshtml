@@ -1,0 +1,26 @@
+﻿@model Botify.Entidades.Artista
+
+@{
+    ViewData["Title"] = "Chat";
+}
+
+
+<div>
+
+    @if (Model != null)
+    {
+        <div style="background-color: aquamarine;">
+            <h1>@Model.Name</h1>
+            <p><strong>Id:</strong> @Model.Id</p>
+            <p><strong>Popularidad:</strong> @Model.Popularity</p>
+        </div>
+
+    }
+
+    <form asp-action="EnviarMensaje" asp-controller="Chat">
+        <input type="text" />
+        <button type="submit">Enviar</button>
+    </form>
+
+
+</div>

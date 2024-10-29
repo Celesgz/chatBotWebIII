@@ -12,7 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient(); // Registra HttpClient como servicio
+
+builder.Services.AddScoped<IBotLogica, BotLogica>();
 builder.Services.AddScoped<ITokenLogica, TokenLogica>();
+
 builder.Services.Configure<SpotifyConfig>(builder.Configuration.GetSection("Spotify"));
 builder.Services.AddScoped<BotifyContext>();
 builder.Services.AddScoped<IUsuariosLogica, UsuariosLogica>();
@@ -22,7 +26,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Usuarios/IngresarSesion";
 });
 
-// Configuración de autenticación (JWT y Cookies)
+// Configuraciï¿½n de autenticaciï¿½n (JWT y Cookies)
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(options =>
 {

@@ -52,7 +52,7 @@ namespace API.Spotify.Web.Controllers
                 Expires = DateTimeOffset.Now.AddMinutes(60)
             });
 
-            return RedirectToAction("IngresoOk");
+            return RedirectToAction("Chat", "Chat");
         }
         [HttpGet]
         //[Authorize(AuthenticationSchemes = "CookieAuth")]
