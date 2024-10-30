@@ -1,40 +1,59 @@
-﻿@{
-    ViewData["Title"] = "Chat con Bot";
-}
+﻿<!DOCTYPE html>
+<html lang="es">
 
-<h1>@ViewData["Title"]</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/chatBot.css" asp-append-version="true" />
+    <title>Bot de Chat</title>
+</head>
 
-<div>
-    <input type="text" id="userMessage" placeholder="Escribe tu mensaje..." />
-    <button id="sendButton">Enviar</button>
-</div>
-<div id="chatOutput"></div>
+<body>
 
-@section Scripts {
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#sendButton").click(async function() {
-                const message = $("#userMessage").val();
-                if (message) {
-                    const response = await fetch('/Chat/SendMessage', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(message),
-                    });
+    <button class="chat-button" id="chatButton">👾</button>
 
-                    if (response.ok) {
-                        const botResponse = await response.text();
-                        $("#chatOutput").append(`<p><strong>Bot:</strong> ${botResponse}</p>`);
-                    } else {
-                        console.error("Error al enviar el mensaje:", response.statusText);
-                    }
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            Chat
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div id="webchat" class="webchat"></div>
+        </div>
+    </div>
 
-                    $("#userMessage").val('');
-                }
-            });
+
+
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    <script src="~/js/chatBot.js"></script>
+</body>
+
+</html>
+
+<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+<script>
+    (async function () {
+        const userID = '2'
+        const userName = '1'
+        const locale = 'en-US'
+
+        const directLine = window.WebChat.createDirectLine({
+            domain: 'http://localhost:60195/v3/directline',// Puerto de bot emulator
+            webSocket: false
         });
-    </script>
-}
+
+        window.WebChat.renderWebChat(
+            {
+                directLine: directLine,
+                userID: userID,
+                username: userName,
+                locale: locale,
+                styleOptions: {
+                    botAvatarInitials: 'BP',
+                    userAvatarInitials: 'YO',
+                    backgroundColor: '#F8F8F8'
+                }
+            },
+            document.getElementById('webchat')
+        );
+    })().catch(err => console.error(err));
+</script>
