@@ -12,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient(); // Registra HttpClient como servicio
+builder.Services.AddHttpClient();
+ // Registra HttpClient como servicio
 
 builder.Services.AddScoped<IBotLogica, BotLogica>();
 builder.Services.AddScoped<ITokenLogica, TokenLogica>();

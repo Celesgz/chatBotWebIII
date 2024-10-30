@@ -10,41 +10,45 @@ using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+
 namespace Botify.Logica;
 
 public interface IBotLogica
 {
-    Task<Artista> RecomendarArtista();
+    Task<string> SendMessageToBot(string message);
 }
 public class BotLogica : IBotLogica
 {
     private readonly HttpClient _httpClient;
-    private readonly ITokenLogica _tokenLogica;
+    private const string _botEndpoint = "http://localhost:3978/api/messages";
 
-    public BotLogica(HttpClient httpClient, ITokenLogica tokenLogica)
+    public BotLogica(HttpClient httpClient)
     {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        _tokenLogica = tokenLogica;
+        _httpClient = httpClient;
+
     }
 
-    public async Task<Artista> RecomendarArtista()
+    public async Task<string> SendMessageToBot(string message)
     {
-        var accessToken = await _tokenLogica.ObtenerToken();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-        var response = await _httpClient.GetAsync($"https://api.spotify.com/v1/artists/4dpARuHxo51G3z768sgnrY");
-        response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
-
-        var options = new JsonSerializerOptions
+        var payload = new
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            type = "message",
+            text = message
         };
 
-        var artista = JsonSerializer.Deserialize<Artista>(content, options);
+        // Usar System.Text.Json
+        var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
-        return artista;
+        var response = await _httpClient.PostAsync(_botEndpoint, content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var botResponse = await response.Content.ReadAsStringAsync();
+            return botResponse;
+        }
+        else
+        {
+            throw new HttpRequestException($"Error en la comunicación con el bot: {response.ReasonPhrase}");
+        }
     }
-
 }
