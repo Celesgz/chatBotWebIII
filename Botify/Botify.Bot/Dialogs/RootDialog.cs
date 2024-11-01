@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Botify.Logica;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Recognizers.Text;
@@ -17,18 +18,19 @@ namespace Microsoft.BotBuilderSamples
     /// </summary>
     public class RootDialog : ComponentDialog
     {
+        private readonly ITokenLogica _tokenLogica;
         private readonly IStatePropertyAccessor<JObject> _userStateAccessor;
 
-        public RootDialog(UserState userState)
+        public RootDialog(UserState userState, ITokenLogica tokenLogica)
             : base("root")
         {
             _userStateAccessor = userState.CreateProperty<JObject>("result");
-
+            _tokenLogica = tokenLogica;
             // Rather than explicitly coding a Waterfall we have only to declare what properties we want collected.
             // In this example we will want two text prompts to run, one for the first name and one for the last.
             var fullname_slots = new List<SlotDetails>
             {
-                new SlotDetails("first", "text", "Please enter your first name."),
+                new SlotDetails("first", "text", "Ingresa tu nombre."),
                 new SlotDetails("last", "text", "Please enter your last name."),
             };
 
@@ -51,6 +53,7 @@ namespace Microsoft.BotBuilderSamples
             };
 
             // Add the various dialogs that will be used to the DialogSet.
+            AddDialog(new TextPrompt("moodPrompt")); // dialogo del animo
             AddDialog(new SlotFillingDialog("address", address_slots));
             AddDialog(new SlotFillingDialog("fullname", fullname_slots));
             AddDialog(new TextPrompt("text"));
@@ -59,11 +62,31 @@ namespace Microsoft.BotBuilderSamples
             AddDialog(new SlotFillingDialog("slot-dialog", slots));
 
             // Defines a simple two step Waterfall to test the slot dialog.
-            AddDialog(new WaterfallDialog("waterfall", new WaterfallStep[] { StartDialogAsync, ProcessResultsAsync }));
+            AddDialog(new WaterfallDialog("waterfall", new WaterfallStep[] { AskMoodAsync, ProvideRecommendationsAsync, StartDialogAsync, ProcessResultsAsync }));
 
             // The initial child Dialog to run.
             InitialDialogId = "waterfall";
         }
+
+        private async Task<DialogTurnResult> AskMoodAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            return await stepContext.PromptAsync("moodPrompt", new PromptOptions { Prompt = MessageFactory.Text("Hola, soy botify! (˶ᵔ ᵕ ᵔ˶) Contame como te sentis hoy y puedo recomendarte un poco de musica...") }, cancellationToken);
+        }
+
+        private async Task<DialogTurnResult> ProvideRecommendationsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            var mood = (string)stepContext.Result;
+
+            // Llama al servicio para obtener recomendaciones basadas en el estado de ánimo
+            var recommendationsMessage = await _tokenLogica.ObtenerRecomendaciones(mood);
+
+            // Envía el mensaje de recomendaciones al usuario
+            await stepContext.Context.SendActivityAsync(MessageFactory.Text(recommendationsMessage), cancellationToken);
+
+            return await stepContext.EndDialogAsync(null, cancellationToken);
+        }
+
+
 
         private Task<bool> ShoeSizeAsync(PromptValidatorContext<float> promptContext, CancellationToken cancellationToken)
         {

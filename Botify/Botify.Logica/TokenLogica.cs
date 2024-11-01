@@ -1,9 +1,7 @@
 ﻿namespace Botify.Logica;
-
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,12 +9,16 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Botify.Entidades;
 using Microsoft.Extensions.Options;
+using Botify.Entidades;
+using System.Text.Json.Serialization;
+using System.Text;
 
+// usar este y cambiarle el nombre
 public interface ITokenLogica
 {
     public Task<string> ObtenerToken();
-
     public Task<string> ObtenerInformacionDelArtista(string artistaId);
+    Task<string> ObtenerRecomendaciones(string mood);
 
 }
 public class TokenLogica : ITokenLogica
@@ -61,9 +63,57 @@ public class TokenLogica : ITokenLogica
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
-        return content; 
+        return content;
     }
 
+    public async Task<string> ObtenerRecomendaciones(string mood)
+    {
+        if (MoodToGenreMap.TryGetValue(mood.ToLower(), out var genre))
+        {
+            var accessToken = await ObtenerToken();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var response = await httpClient.GetAsync($"https://api.spotify.com/v1/recommendations?seed_genres={genre}&limit=3&market=AR");
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+         
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+            // Deserializar la respuesta
+            var recommendationResponse = JsonSerializer.Deserialize<RecommendationResponse>(content, options);
+            // Formatear la respuesta
+            var formattedRecommendations = new StringBuilder();
+            formattedRecommendations.AppendLine($"Recomendaciones para el estado de ánimo: {mood}");
+
+            foreach (var track in recommendationResponse.Tracks)
+            {
+                var artistNames = string.Join(", ", track.Artists.Select(a => a.Name));
+               formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify})");
+
+            }
+
+            return formattedRecommendations.ToString();
+        }
+        else
+        {
+            return $"No hay recomendaciones disponibles para el estado de ánimo: {mood}.";
+        }
+    }
+
+
+    private static readonly Dictionary<string, string> MoodToGenreMap = new Dictionary<string, string>
+{
+    { "feliz", "pop" },
+    { "triste", "blues" },
+    { "energético", "dance" },
+    { "relajado", "jazz" },
+    { "romántico", "romance" },
+    // Agrega más estados y géneros según sea necesario
+};
 
 }
 

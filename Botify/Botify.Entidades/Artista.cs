@@ -28,8 +28,8 @@ namespace Botify.Entidades
         public string Href { get; set; }
         public int Total { get; set; }
     }
-    public class ExternalUrls
-    {
-        public string Spotify { get; set; }
-    }
+    // public class ExternalUrls
+    // {
+    //     public string Spotify { get; set; }
+    // }
 }
