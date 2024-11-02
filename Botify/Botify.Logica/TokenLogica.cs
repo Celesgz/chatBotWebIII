@@ -68,7 +68,7 @@ public class TokenLogica : ITokenLogica
 
     public async Task<string> ObtenerRecomendaciones(string mood)
     {
-        if (MoodToGenreMap.TryGetValue(mood.ToLower(), out var genre))
+        if (MoodToGenreMap.TryGetValue(mood, out var genre))
         {
             var accessToken = await ObtenerToken();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -92,7 +92,8 @@ public class TokenLogica : ITokenLogica
             foreach (var track in recommendationResponse.Tracks)
             {
                 var artistNames = string.Join(", ", track.Artists.Select(a => a.Name));
-               formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify})");
+                var albumImageUrl = track.Album.Images.FirstOrDefault()?.Url ?? "Imagen no disponible";
+                formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - ![Portada]({albumImageUrl}) - [Escuchar aquí]({track.ExternalUrls.Spotify})");
 
             }
 
