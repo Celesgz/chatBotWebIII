@@ -1,5 +1,4 @@
 ﻿
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +14,13 @@
 </head>
 <body>
     <header>
-        <header>
-            @Html.Partial("_Nav") 
-        </header>
+        @if (ViewBag.ShowHeader != null && (bool)ViewBag.ShowHeader)
+        {
+            <header>
+                @Html.Partial("_Nav", false)
+            </header>
+        }
+
     </header>
 
     <div class="container">

@@ -5,3 +5,44 @@
     margin: 0;
     background: url('fondoHome.png') no-repeat center center fixed;
 }
+
+.text-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate(0%, 850%);
+}
+
+.btn-primary {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0A1B33;
+    background: linear-gradient(to bottom, #A0D8F1, #72B5E2);
+    border: 3px solid #1A3451;
+    padding: 10px 20px;
+    box-shadow: inset 0 3px #E0F7FF, 0 4px 8px rgba(0, 0, 0, 0.3), 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+
+.btn-outline-primary {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0A1B33;
+    background: linear-gradient(to bottom, #A0D8F1, #72B5E2);
+    border: 3px solid #1A3451;
+    padding: 10px 20px;
+    box-shadow: inset 0 3px #E0F7FF, 0 4px 8px rgba(0, 0, 0, 0.3), 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+    .btn-primary:active, .btn-outline-primary:active {
+        transform: translateY(3px);
+        box-shadow: inset 0 2px #B8E1F8, 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
