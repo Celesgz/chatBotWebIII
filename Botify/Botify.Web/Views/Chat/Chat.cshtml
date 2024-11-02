@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = "_Layout"; // Asegúrate de que el nombre del layout sea correcto
+}
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -9,47 +12,46 @@
 </head>
 
 <body>
+   
 
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
-            Chat
+            Nuestro Chat
         </div>
         <div class="chat-body" id="chatBody">
             <div id="webchat" class="webchat"></div>
         </div>
     </div>
 
+    <!-- Script para integrar el Bot Framework Web Chat -->
     <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
     <script src="~/js/chatBot.js"></script>
+    <script>
+        (async function () {
+            const userID = '2';
+            const userName = '1';
+            const locale = 'en-US';
+
+            const directLine = window.WebChat.createDirectLine({
+                domain: 'http://localhost:55654/v3/directline', // Puerto de bot emulator
+                webSocket: false
+            });
+
+            window.WebChat.renderWebChat(
+                {
+                    directLine: directLine,
+                    userID: userID,
+                    username: userName,
+                    locale: locale,
+                    styleOptions: {
+                        botAvatarInitials: 'BP',
+                        userAvatarInitials: 'YO',
+                        backgroundColor: '#F8F8F8'
+                    }
+                },
+                document.getElementById('webchat')
+            );
+        })().catch(err => console.error(err));
+    </script>
 </body>
-
 </html>
-
-<script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
-<script>
-    (async function () {
-        const userID = '2'
-        const userName = '1'
-        const locale = 'en-US'
-
-        const directLine = window.WebChat.createDirectLine({
-            domain: 'http://localhost:49877/v3/directline',// Puerto de bot emulator
-            webSocket: false
-        });
-
-        window.WebChat.renderWebChat(
-            {
-                directLine: directLine,
-                userID: userID,
-                username: userName,
-                locale: locale,
-                styleOptions: {
-                    botAvatarInitials: 'BP',
-                    userAvatarInitials: 'YO',
-                    backgroundColor: '#F8F8F8'
-                }
-            },
-            document.getElementById('webchat')
-        );
-    })().catch(err => console.error(err));
-</script>

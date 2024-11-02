@@ -1,0 +1,7 @@
+﻿body {
+    justify-content: center;
+    align-items: center;
+    max-height: 110vh;
+    margin: 0;
+    background: url('fondoHome.png') no-repeat center center fixed;
+}
