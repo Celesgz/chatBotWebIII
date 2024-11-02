@@ -10,6 +10,28 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configura el servicio de autenticación JWT
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+    };
+});
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
@@ -22,44 +44,6 @@ builder.Services.Configure<SpotifyConfig>(builder.Configuration.GetSection("Spot
 builder.Services.AddScoped<BotifyContext>();
 builder.Services.AddScoped<IUsuariosLogica, UsuariosLogica>();
 builder.Services.AddScoped<AuthService>();
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Usuarios/IngresarSesion";
-});
-
-// Configuraci�n de autenticaci�n (JWT y Cookies)
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-    };
-})
-.AddCookie("CookieAuth", options =>
-{
-    options.Cookie.Name = "AuthToken";
-    options.LoginPath = "/Usuarios/IniciarSesion";  // Ruta de login
-    options.Events = new CookieAuthenticationEvents
-    {
-        OnRedirectToLogin = context =>
-        {
-            context.Response.Redirect("/Usuarios/IniciarSesion");
-            return Task.CompletedTask;
-        }
-    };
-});
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

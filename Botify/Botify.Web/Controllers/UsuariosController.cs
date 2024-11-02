@@ -1,6 +1,5 @@
 ﻿using Botify.Data;
 using Botify.Logica;
-using API.Spotify.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Botify.Logica;
@@ -28,37 +27,22 @@ namespace API.Spotify.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(Usuario usuario)
         {
-            UsuarioModelView model = new UsuarioModelView
-            {
-                Email = usuario.Email,
-                Password = usuario.Password
-            };
-
-            // Llamar al servicio de autenticación para validar credenciales y generar token
-            var token = await _authService.AuthenticateAsync(model.Email, model.Password);
+            var token = await _authService.AuthenticateAsync(usuario.Email, usuario.Password);
 
             if (token == null)
             {
                 ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
-                return View(usuario); // Puedes redirigir a una vista de error o mostrar el error en la vista actual
+                return View(usuario);
+            } else
+            {
+                Console.WriteLine("token generado");
+            // Guarda el token en TempData para enviarlo al frontend
+            TempData["AuthToken"] = token;
+
+            // Redirige a la acción Chat en el controlador Chat
+            return RedirectToAction("Chat", "Chat");
             }
 
-            // Configurar la cookie con el token
-            Response.Cookies.Append("AuthToken", token, new CookieOptions
-            {
-                HttpOnly = true,
-                //Secure = true,
-                //SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.Now.AddMinutes(60)
-            });
-
-            return RedirectToAction("Chat", "Chat");
-        }
-        [HttpGet]
-        //[Authorize(AuthenticationSchemes = "CookieAuth")]
-        public IActionResult IngresoOk()
-        {
-            return View();
         }
     }
 }

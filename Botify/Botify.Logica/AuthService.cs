@@ -48,6 +48,16 @@ public class AuthService
             signingCredentials: creds
         );
 
+        if (token == null)
+        {
+            Console.WriteLine("Error: Token no generado.");
+        }
+        else
+        {
+            Console.WriteLine("Token generado: " + token);
+        }
+
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

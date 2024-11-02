@@ -21,9 +21,25 @@
 
     <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
     <script src="~/js/chatBot.js"></script>
+    <script src="~/js/chat.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = '@TempData["AuthToken"]'; // Verifica que este valor esté disponible
+            console.log("Token desde TempData:", token); // Añade un log para verificar
+
+            if (token) {
+                localStorage.setItem('token', token); // Almacena el token en el navegador
+                console.log("Token almacenado:", token); // Verifica que el token se ha almacenado
+            } else {
+                console.log("No se encontró un token válido.");
+            }
+        });
+    </script>
 </body>
 
 </html>
+
+
 
 <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 <script>
