@@ -1,0 +1,44 @@
+﻿@{
+    @model Botify.Data.EF.Usuario;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrarse</title>
+</head>
+<body>
+    <h3>Creá una cuenta para comenzar a chatear</h3>
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info">
+            @ViewBag.Message.Split("iniciar sesión")[0]
+            <a href="@Url.Action("IniciarSesion", "Usuarios")">iniciar sesión</a>
+            @ViewBag.Message.Split("iniciar sesión")[1]
+        </div>
+    }
+    <section>
+        <form asp-action="Registrarse" asp-controller="Usuarios" method="post">
+            <div class="form-group">
+                <label asp-for="Nombre"></label>
+                <input type="text" asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input type="email" asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input type="password" asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Registrarte</button>
+        </form>
+    </section>
+</body>
+</html>

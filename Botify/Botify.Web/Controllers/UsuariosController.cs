@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Botify.Logica;
 using Botify.Data.EF;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Spotify.Web.Controllers
 {
@@ -28,14 +30,9 @@ namespace API.Spotify.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(Usuario usuario)
         {
-            UsuarioModelView model = new UsuarioModelView
-            {
-                Email = usuario.Email,
-                Password = usuario.Password
-            };
 
             // Llamar al servicio de autenticación para validar credenciales y generar token
-            var token = await _authService.AuthenticateAsync(model.Email, model.Password);
+            var token = await _authService.AuthenticateAsync(usuario.Email, usuario.Password);
 
             if (token == null)
             {
@@ -54,12 +51,52 @@ namespace API.Spotify.Web.Controllers
 
             return RedirectToAction("Chat", "Chat");
         }
+
         [HttpGet]
-        //[Authorize(AuthenticationSchemes = "CookieAuth")]
-        public IActionResult IngresoOk()
+        public IActionResult Registrarse()
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Registrarse(Usuario usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                Usuario? encontrado = await _usuariosLogica.BuscarUsuario(usuario);
+                if (encontrado == null)
+                {
+                    try
+                    {
+                        await _usuariosLogica.AgregarUsuario(usuario);
+                        ViewBag.Message = "Usuario registrado. Ahora podés iniciar sesión";
+                    }
+                    catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2627)
+                    {
+                        if (sqlEx.Message.Contains("UQ_Usuario_Nombre"))
+                        {
+                            ModelState.AddModelError("Nombre", "El nombre de usuario ya existe. Por favor, elegí otro.");
+                        }
+                        else if (sqlEx.Message.Contains("UQ_Usuario_Email"))
+                        {
+                            ViewBag.Message = "El e-mail ya está registrado. ¿Querés iniciar sesión?";
+                            ModelState.AddModelError("Email", "El e-mail ya está registrado");
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ModelState.AddModelError("", "Ocurrió un error inesperado. Intenta de nuevo.");
+                    }
+                }
+                else
+                {
+                    ViewBag.Message = "El usuario ya existe, ¿querés iniciar sesión?";
+                }
+            }
+
+            return View(usuario);
+        }
+
     }
 }
 
