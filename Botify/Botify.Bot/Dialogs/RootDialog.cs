@@ -13,9 +13,53 @@ using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples
 {
-    /// <summary>
-    /// This is an example root dialog. Replace this with your applications.
-    /// </summary>
+    //public class RootDialog : ComponentDialog
+    //{
+    //    private readonly IBotLogica _botLogica;
+    //    private readonly IStatePropertyAccessor<JObject> _userStateAccessor;
+
+    //    public RootDialog(UserState userState, IBotLogica botLogica)
+    //        : base("root")
+    //    {
+    //        _userStateAccessor = userState.CreateProperty<JObject>("result");
+    //        _botLogica = botLogica;
+
+    //        // Add the various dialogs that will be used to the DialogSet.
+    //        AddDialog(new TextPrompt("namePrompt"));
+    //        AddDialog(new TextPrompt("moodPrompt"));
+
+    //        // Defines a simple two step Waterfall to test the slot dialog.
+    //        AddDialog(new WaterfallDialog("waterfall", new WaterfallStep[] { AskNameAsync, AskMoodAsync, ProvideSongsRecommendationsAsync }));
+
+    //        // The initial child Dialog to run.
+    //        InitialDialogId = "waterfall";
+    //    }
+
+
+    //    // 1- pide nombre
+    //    private async Task<DialogTurnResult> AskNameAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+    //    {
+    //        return await stepContext.PromptAsync("namePrompt", new PromptOptions { Prompt = MessageFactory.Text("Por favor, antes de comenzar, ingresá tu nombre") }, cancellationToken);
+    //    }
+
+    //    // eleccion canciones - pregunta por estado
+    //    private async Task<DialogTurnResult> AskMoodAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+    //    {
+    //        var name = (string)stepContext.Result;
+    //        return await stepContext.PromptAsync("moodPrompt", new PromptOptions { Prompt = MessageFactory.Text($"Buenas {name}, te saluda Botify! (˶ᵔ ᵕ ᵔ˶) Soy un asistente virtual que te va a ayudar a encontrar las mejores recomendaciones musicales en base a tu estado de animo.\n\nPara darte canciones, dime directamente como te sientes, es importante que ingreses un estado directo (feliz, triste, entusisamado, etc) sin roscas nos entendemos mejor, no? ") }, cancellationToken);
+    //    }
+
+    //    // eleccion canciones - trae las canciones por el animo ingresado
+    //    private async Task<DialogTurnResult> ProvideSongsRecommendationsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+    //    {
+    //        var mood = (string)stepContext.Result;
+    //        var recommendationsMessage = await _botLogica.ObtenerRecomendaciones(mood);
+    //        await stepContext.Context.SendActivityAsync(MessageFactory.Text(recommendationsMessage), cancellationToken);
+    //        return await stepContext.EndDialogAsync(null, cancellationToken);
+    //    }
+
+    //}
+
     public class RootDialog : ComponentDialog
     {
         private readonly IBotLogica _botLogica;
@@ -26,126 +70,80 @@ namespace Microsoft.BotBuilderSamples
         {
             _userStateAccessor = userState.CreateProperty<JObject>("result");
             _botLogica = botLogica;
-            // Rather than explicitly coding a Waterfall we have only to declare what properties we want collected.
-            // In this example we will want two text prompts to run, one for the first name and one for the last.
-            var fullname_slots = new List<SlotDetails>
-            {
-                new SlotDetails("first", "text", "Ingresa tu nombre."),
-                new SlotDetails("last", "text", "Please enter your last name."),
-            };
-
-            // This defines an address dialog that collects street, city and zip properties.
-            var address_slots = new List<SlotDetails>
-            {
-                new SlotDetails("street", "text", "Please enter the street."),
-                new SlotDetails("city", "text", "Please enter the city."),
-                new SlotDetails("zip", "text", "Please enter the zip."),
-            };
-
-            // Dialogs can be nested and the slot filling dialog makes use of that. In this example some of the child
-            // dialogs are slot filling dialogs themselves.
-            var slots = new List<SlotDetails>
-            {
-                new SlotDetails("fullname", "fullname"),
-                new SlotDetails("age", "number", "Please enter your age."),
-                new SlotDetails("shoesize", "shoesize", "Please enter your shoe size.", "You must enter a size between 0 and 16. Half sizes are acceptable."),
-                new SlotDetails("address", "address"),
-            };
 
             // Add the various dialogs that will be used to the DialogSet.
             AddDialog(new TextPrompt("namePrompt"));
             AddDialog(new TextPrompt("moodPrompt"));
-            AddDialog(new SlotFillingDialog("address", address_slots));
-            AddDialog(new SlotFillingDialog("fullname", fullname_slots));
-            AddDialog(new TextPrompt("text"));
-            AddDialog(new NumberPrompt<int>("number", defaultLocale: Culture.English));
-            AddDialog(new NumberPrompt<float>("shoesize", ShoeSizeAsync, defaultLocale: Culture.English));
-            AddDialog(new SlotFillingDialog("slot-dialog", slots));
 
-            // Defines a simple two step Waterfall to test the slot dialog.
-            AddDialog(new WaterfallDialog("waterfall", new WaterfallStep[] { AskNameAsync, AskMoodAsync, ProvideSongsRecommendationsAsync }));
+            // Define a simple WaterfallDialog with multiple steps.
+            AddDialog(new WaterfallDialog("waterfall", new WaterfallStep[]
+            {
+            AskNameAsync,
+            AskMoodAsync,
+            ProvideSongsRecommendationsAsync
+            }));
+
+            AddDialog(new WaterfallDialog("infinito", new WaterfallStep[]
+            {
+            AskMoodAgainAsync,
+            ProvideSongsRecommendationsAsync
+            }));
 
             // The initial child Dialog to run.
             InitialDialogId = "waterfall";
         }
 
-
-        // 1- pide nombre
+        // 1- Pide nombre
         private async Task<DialogTurnResult> AskNameAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            return await stepContext.PromptAsync("namePrompt", new PromptOptions { Prompt = MessageFactory.Text("Por favor, antes de comenzar, ingresá tu nombre") }, cancellationToken);
+            return await stepContext.PromptAsync("namePrompt", new PromptOptions
+            {
+                Prompt = MessageFactory.Text("Por favor, antes de comenzar, ingresá tu nombre")
+            }, cancellationToken);
         }
 
-        // eleccion canciones - pregunta por estado
+        // 2- Elección de canciones - pregunta por estado
         private async Task<DialogTurnResult> AskMoodAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var name = (string)stepContext.Result;
-            return await stepContext.PromptAsync("moodPrompt", new PromptOptions { Prompt = MessageFactory.Text($"Buenas {name}, te saluda Botify! (˶ᵔ ᵕ ᵔ˶) Soy un asistente virtual que te va a ayudar a encontrar las mejores recomendaciones musicales en base a tu estado de animo.\n\nPara darte canciones, dime directamente como te sientes, es importante que ingreses un estado directo (feliz, triste, entusisamado, etc) sin roscas nos entendemos mejor, no? ") }, cancellationToken);
+            return await stepContext.PromptAsync("moodPrompt", new PromptOptions
+            {
+                Prompt = MessageFactory.Text($"Buenas {name}, te saluda Botify! (˶ᵔ ᵕ ᵔ˶) Soy un asistente virtual que te va a ayudar a encontrar las mejores recomendaciones musicales en base a tu estado de ánimo.\n\n" +
+                "Por favor, ingresa tu estado de ánimo incluyendo una de las siguientes palabras clave:\n" +
+                "- Feliz\n" +
+                "- Triste\n" +
+                "- Energetico\n" +
+                "- Relajado\n" +
+                "- Romantico\n" +
+                "- Nostalgico\n" +
+                "- Furioso\n" +
+                "- Motivador\n")              
+
+            }, cancellationToken);
         }
 
-        // eleccion canciones - trae las canciones por el animo ingresado
+        // 3- Elección de canciones - trae las canciones por el ánimo ingresado
         private async Task<DialogTurnResult> ProvideSongsRecommendationsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var mood = (string)stepContext.Result;
             var recommendationsMessage = await _botLogica.ObtenerRecomendaciones(mood);
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(recommendationsMessage), cancellationToken);
-            return await stepContext.EndDialogAsync(null, cancellationToken);
+
+            // Pregunta por otro estado de ánimo
+            return await stepContext.ReplaceDialogAsync("infinito", null, cancellationToken);
         }
 
-
-
-        // ------------------------------------------------------------------
-
-
-        private Task<bool> ShoeSizeAsync(PromptValidatorContext<float> promptContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> AskMoodAgainAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var shoesize = promptContext.Recognized.Value;
-
-            // show sizes can range from 0 to 16
-            if (shoesize >= 0 && shoesize <= 16)
+            var name = (string)stepContext.Result;
+            return await stepContext.PromptAsync("moodPrompt", new PromptOptions
             {
-                // we only accept round numbers or half sizes
-                if (Math.Floor(shoesize) == shoesize || Math.Floor(shoesize * 2) == shoesize * 2)
-                {
-                    // indicate success by returning the value
-                    return Task.FromResult(true);
-                }
-            }
-
-            return Task.FromResult(false);
-        }
-
-        private async Task<DialogTurnResult> StartDialogAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            // Start the child dialog. This will run the top slot dialog than will complete when all the properties are gathered.
-            return await stepContext.BeginDialogAsync("slot-dialog", null, cancellationToken);
-        }
-
-        private async Task<DialogTurnResult> ProcessResultsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            // To demonstrate that the slot dialog collected all the properties we will echo them back to the user.
-            if (stepContext.Result is IDictionary<string, object> result && result.Count > 0)
-            {
-                var fullname = (IDictionary<string, object>)result["fullname"];
-                var shoesize = result["shoesize"];
-                var address = (IDictionary<string, object>)result["address"];
-
-                // Now the waterfall is complete, save the data we have gathered into UserState. 
-                var obj = await _userStateAccessor.GetAsync(stepContext.Context, () => new JObject(), cancellationToken);
-                obj["data"] = new JObject
-                {
-                    { "fullname",  $"{fullname["first"]} {fullname["last"]}" },
-                    { "shoesize", $"{shoesize}" },
-                    { "address", $"{address["street"]}, {address["city"]}, {address["zip"]}" },
-                };
-
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text(obj["data"]["fullname"].Value<string>()), cancellationToken);
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text(obj["data"]["shoesize"].Value<string>()), cancellationToken);
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text(obj["data"]["address"].Value<string>()), cancellationToken);
-            }
-
-            // Remember to call EndAsync to indicate to the runtime that this is the end of our waterfall.
-            return await stepContext.EndDialogAsync(null, cancellationToken);
+                Prompt = MessageFactory.Text($"Adelante, puedes seguir contándome tu estado de ánimo y encontraré más canciones para ti. ᕙ( •̀ ᗜ •́ )ᕗ")
+            }, cancellationToken);
         }
     }
+
 }
+
+
+
