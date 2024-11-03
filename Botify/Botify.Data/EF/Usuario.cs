@@ -28,4 +28,3 @@ public partial class Usuario
     [DisplayName("E-mail")]
     public string Email { get; set; } = null!;
 }
-
