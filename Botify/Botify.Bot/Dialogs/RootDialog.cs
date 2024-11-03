@@ -73,14 +73,14 @@ namespace Microsoft.BotBuilderSamples
         // 1- pide nombre
         private async Task<DialogTurnResult> AskNameAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            return await stepContext.PromptAsync("namePrompt", new PromptOptions { Prompt = MessageFactory.Text("Porfavor, Antes de comenzar, ingresa tu nombre") }, cancellationToken);
+            return await stepContext.PromptAsync("namePrompt", new PromptOptions { Prompt = MessageFactory.Text("Por favor, antes de comenzar, ingresá tu nombre") }, cancellationToken);
         }
 
         // eleccion canciones - pregunta por estado
         private async Task<DialogTurnResult> AskMoodAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var name = (string)stepContext.Result;
-            return await stepContext.PromptAsync("moodPrompt", new PromptOptions { Prompt = MessageFactory.Text($"Buenas {name}, te saluda Botify! (˶ᵔ ᵕ ᵔ˶) Soy un asistenete virtual que te va a ayudar a encontrar las mejores recomendaciones musicales en base a tu estado de animo.\n\nPara darte canciones, dime directamente como te sientes, es importante que ingreses un estado directo (feliz, triste, entusisamado, etc) sin roscas nos entendemos mejor, no? ") }, cancellationToken);
+            return await stepContext.PromptAsync("moodPrompt", new PromptOptions { Prompt = MessageFactory.Text($"Buenas {name}, te saluda Botify! (˶ᵔ ᵕ ᵔ˶) Soy un asistente virtual que te va a ayudar a encontrar las mejores recomendaciones musicales en base a tu estado de animo.\n\nPara darte canciones, dime directamente como te sientes, es importante que ingreses un estado directo (feliz, triste, entusisamado, etc) sin roscas nos entendemos mejor, no? ") }, cancellationToken);
         }
 
         // eleccion canciones - trae las canciones por el animo ingresado
