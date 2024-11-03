@@ -53,7 +53,8 @@ namespace Microsoft.BotBuilderSamples
             };
 
             // Add the various dialogs that will be used to the DialogSet.
-            AddDialog(new TextPrompt("moodPrompt")); // dialogo del animo
+            AddDialog(new TextPrompt("namePrompt"));
+            AddDialog(new TextPrompt("moodPrompt"));
             AddDialog(new SlotFillingDialog("address", address_slots));
             AddDialog(new SlotFillingDialog("fullname", fullname_slots));
             AddDialog(new TextPrompt("text"));
@@ -62,30 +63,38 @@ namespace Microsoft.BotBuilderSamples
             AddDialog(new SlotFillingDialog("slot-dialog", slots));
 
             // Defines a simple two step Waterfall to test the slot dialog.
-            AddDialog(new WaterfallDialog("waterfall", new WaterfallStep[] { AskMoodAsync, ProvideRecommendationsAsync, StartDialogAsync, ProcessResultsAsync }));
+            AddDialog(new WaterfallDialog("waterfall", new WaterfallStep[] { AskNameAsync, AskMoodAsync, ProvideSongsRecommendationsAsync }));
 
             // The initial child Dialog to run.
             InitialDialogId = "waterfall";
         }
 
-        private async Task<DialogTurnResult> AskMoodAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+
+        // 1- pide nombre
+        private async Task<DialogTurnResult> AskNameAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            return await stepContext.PromptAsync("moodPrompt", new PromptOptions { Prompt = MessageFactory.Text("Hola, soy botify! (˶ᵔ ᵕ ᵔ˶) Contame como te sentis hoy y puedo recomendarte un poco de musica...") }, cancellationToken);
+            return await stepContext.PromptAsync("namePrompt", new PromptOptions { Prompt = MessageFactory.Text("Porfavor, Antes de comenzar, ingresa tu nombre") }, cancellationToken);
         }
 
-        private async Task<DialogTurnResult> ProvideRecommendationsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        // eleccion canciones - pregunta por estado
+        private async Task<DialogTurnResult> AskMoodAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            var name = (string)stepContext.Result;
+            return await stepContext.PromptAsync("moodPrompt", new PromptOptions { Prompt = MessageFactory.Text($"Buenas {name}, te saluda Botify! (˶ᵔ ᵕ ᵔ˶) Soy un asistenete virtual que te va a ayudar a encontrar las mejores recomendaciones musicales en base a tu estado de animo.\n\nPara darte canciones, dime directamente como te sientes, es importante que ingreses un estado directo (feliz, triste, entusisamado, etc) sin roscas nos entendemos mejor, no? ") }, cancellationToken);
+        }
+
+        // eleccion canciones - trae las canciones por el animo ingresado
+        private async Task<DialogTurnResult> ProvideSongsRecommendationsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var mood = (string)stepContext.Result;
-
-            // Llama al servicio para obtener recomendaciones basadas en el estado de ánimo
             var recommendationsMessage = await _tokenLogica.ObtenerRecomendaciones(mood);
-
-            // Envía el mensaje de recomendaciones al usuario
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(recommendationsMessage), cancellationToken);
-
             return await stepContext.EndDialogAsync(null, cancellationToken);
         }
 
+
+
+        // ------------------------------------------------------------------
 
 
         private Task<bool> ShoeSizeAsync(PromptValidatorContext<float> promptContext, CancellationToken cancellationToken)
