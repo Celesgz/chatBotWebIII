@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.Identity;
 
-namespace API.Spotify.Web.Controllers
+namespace Botify.Spotify.Web.Controllers
 {
     public class UsuariosController : Controller
     {

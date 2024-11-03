@@ -101,11 +101,39 @@ public class BotLogica : IBotLogica
 
     private static readonly Dictionary<string, string> MoodToGenreMap = new Dictionary<string, string>
 {
-    { "feliz", "pop" },
+   { "feliz", "pop" },
     { "triste", "blues" },
     { "energético", "dance" },
     { "relajado", "jazz" },
     { "romántico", "romance" },
+    { "nostálgico", "soul" },
+    { "furioso", "metal" },
+    { "optimista", "rock" },
+    { "melancólico", "indie" },
+    { "confuso", "electrónica" },
+    { "inspirado", "folk" },
+    { "emocionado", "hip-hop" },
+    { "pensativo", "clásica" },
+    { "aventurero", "reggae" },
+    { "estresado", "ambient" },
+    { "motivador", "funk" },
+    { "misterioso", "trip-hop" },
+    { "enérgico", "house" },
+    { "alegre", "disco" },
+    { "apasionado", "flamenco" },
+    { "solitario", "country" },
+    { "esperanzado", "gospel" },
+    { "impulsivo", "punk" },
+    { "espiritual", "new age" },
+    { "soñador", "synthwave" },
+    { "enérgico", "punk" },
+    { "curioso", "experimental" },
+    { "oscuro", "gothic" },
+    { "misterioso", "trip-hop" },
+    { "intrigado", "chillwave" },
+    { "agradecido", "latin" },
+    { "meloso", "r&b" }
+
     // Agrega más estados y géneros según sea necesario
 };
 
