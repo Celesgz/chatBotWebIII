@@ -28,7 +28,7 @@ namespace Microsoft.BotBuilderSamples
             });
             // Configurar el acceso a la configuración de Spotify
             services.Configure<SpotifyConfig>(Configuration.GetSection("Spotify"));
-            services.AddSingleton<ITokenLogica, TokenLogica>();
+            services.AddSingleton<IBotLogica, BotLogica>();
             
             services.AddSingleton<BotFrameworkAuthentication, ConfigurationBotFrameworkAuthentication>();
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();

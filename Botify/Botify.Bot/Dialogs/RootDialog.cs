@@ -18,14 +18,14 @@ namespace Microsoft.BotBuilderSamples
     /// </summary>
     public class RootDialog : ComponentDialog
     {
-        private readonly ITokenLogica _tokenLogica;
+        private readonly IBotLogica _botLogica;
         private readonly IStatePropertyAccessor<JObject> _userStateAccessor;
 
-        public RootDialog(UserState userState, ITokenLogica tokenLogica)
+        public RootDialog(UserState userState, IBotLogica botLogica)
             : base("root")
         {
             _userStateAccessor = userState.CreateProperty<JObject>("result");
-            _tokenLogica = tokenLogica;
+            _botLogica = botLogica;
             // Rather than explicitly coding a Waterfall we have only to declare what properties we want collected.
             // In this example we will want two text prompts to run, one for the first name and one for the last.
             var fullname_slots = new List<SlotDetails>
@@ -87,7 +87,7 @@ namespace Microsoft.BotBuilderSamples
         private async Task<DialogTurnResult> ProvideSongsRecommendationsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var mood = (string)stepContext.Result;
-            var recommendationsMessage = await _tokenLogica.ObtenerRecomendaciones(mood);
+            var recommendationsMessage = await _botLogica.ObtenerRecomendaciones(mood);
             await stepContext.Context.SendActivityAsync(MessageFactory.Text(recommendationsMessage), cancellationToken);
             return await stepContext.EndDialogAsync(null, cancellationToken);
         }
