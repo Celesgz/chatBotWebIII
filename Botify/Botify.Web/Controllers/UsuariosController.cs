@@ -8,12 +8,15 @@ using Botify.Data.EF;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.Identity;
+
 namespace API.Spotify.Web.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly AuthService _authService;
         private readonly IUsuariosLogica _usuariosLogica;
+        private readonly PasswordHasher<Usuario> _passwordHasher = new PasswordHasher<Usuario>();
 
         public UsuariosController(AuthService authService, IUsuariosLogica usuariosLogica)
         {
@@ -21,49 +24,49 @@ namespace API.Spotify.Web.Controllers
             _usuariosLogica = usuariosLogica;
         }
 
-        [HttpGet]
-        public IActionResult IniciarSesion()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(Usuario usuario)
         {
+            var usuarioDb = await _usuariosLogica.BuscarUsuarioPorEmail(usuario.Email);
 
-            // Llamar al servicio de autenticación para validar credenciales y generar token
-            var token = await _authService.AuthenticateAsync(usuario.Email, usuario.Password);
-
-            if (token == null)
+            if (usuarioDb != null)
             {
-                ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
-                return View(usuario); // Puedes redirigir a una vista de error o mostrar el error en la vista actual
+                // Verificar la contraseña hasheada
+                var resultado = _passwordHasher.VerifyHashedPassword(usuarioDb, usuarioDb.Password, usuario.Password);
+
+                if (resultado == PasswordVerificationResult.Success)
+                {
+                    var token = await _authService.AuthenticateAsync(usuario.Email, usuario.Password);
+
+                    if (token == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
+                        return View(usuario);
+                    }
+
+                    // Configurar la cookie con el token
+                    Response.Cookies.Append("AuthToken", token, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Expires = DateTimeOffset.Now.AddMinutes(60)
+                    });
+
+                    return RedirectToAction("Chat", "Chat");
+                }
             }
 
-            // Configurar la cookie con el token
-            Response.Cookies.Append("AuthToken", token, new CookieOptions
-            {
-                HttpOnly = true,
-                //Secure = true,
-                //SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.Now.AddMinutes(60)
-            });
-
-            return RedirectToAction("Chat", "Chat");
+            ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
+            return View(usuario);
         }
 
-        [HttpGet]
-        public IActionResult Registrarse()
-        {
-            return View();
-        }
 
         [HttpPost]
         public async Task<IActionResult> Registrarse(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                Usuario? encontrado = await _usuariosLogica.BuscarUsuario(usuario);
+                Usuario? encontrado = await _usuariosLogica.BuscarUsuarioPorEmail(usuario.Email);
+
                 if (encontrado == null)
                 {
                     try
@@ -97,6 +100,19 @@ namespace API.Spotify.Web.Controllers
             return View(usuario);
         }
 
+        [HttpGet]
+        public IActionResult IniciarSesion()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Registrarse()
+        {
+            return View();
+        }
     }
 }
+
+
 
