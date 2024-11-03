@@ -1,0 +1,29 @@
+﻿<head>
+    <link rel="stylesheet" href="~/css/chatBot.css" asp-append-version="true" />
+</head>
+<nav class="navbar navbar-expand-sm  border-bottom box-shadow mb-3">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BOTIFY</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+          @*   <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+            </ul> *@
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout" title="Cerrar sesión">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Cerrar sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
