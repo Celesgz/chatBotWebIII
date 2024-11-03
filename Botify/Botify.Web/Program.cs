@@ -16,7 +16,6 @@ builder.Services.AddHttpClient();
  // Registra HttpClient como servicio
 
 builder.Services.AddScoped<IBotLogica, BotLogica>();
-builder.Services.AddScoped<ITokenLogica, TokenLogica>();
 
 builder.Services.Configure<SpotifyConfig>(builder.Configuration.GetSection("Spotify"));
 builder.Services.AddScoped<BotifyContext>();

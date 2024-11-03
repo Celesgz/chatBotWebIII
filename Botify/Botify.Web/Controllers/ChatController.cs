@@ -10,13 +10,6 @@ public class ChatController : Controller
         _botLogica = botLogica;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> SendMessage([FromBody] string message)
-    {
-        var response = await _botLogica.SendMessageToBot(message);
-        return Ok(response);
-    }
-
     [HttpGet]
     public IActionResult Chat()
     {
