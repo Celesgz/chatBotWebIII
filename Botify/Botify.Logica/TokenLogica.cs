@@ -77,7 +77,7 @@ public class TokenLogica : ITokenLogica
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-         
+
             var options = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -93,7 +93,7 @@ public class TokenLogica : ITokenLogica
             {
                 var artistNames = string.Join(", ", track.Artists.Select(a => a.Name));
                 var albumImageUrl = track.Album.Images.FirstOrDefault()?.Url ?? "Imagen no disponible";
-                formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - ![Portada]({albumImageUrl}) - [Escuchar aquí]({track.ExternalUrls.Spotify})");
+                formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify}) ![Portada]({albumImageUrl})\n");
 
             }
 
@@ -104,7 +104,6 @@ public class TokenLogica : ITokenLogica
             return $"No hay recomendaciones disponibles para el estado de ánimo: {mood}.";
         }
     }
-
 
     private static readonly Dictionary<string, string> MoodToGenreMap = new Dictionary<string, string>
 {
