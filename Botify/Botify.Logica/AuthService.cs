@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Botify.Data.EF;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 public class AuthService
 {
@@ -17,28 +18,38 @@ public class AuthService
         _context = context;
     }
 
-    public async Task<string> AuthenticateAsync(string email, string password)
+        public async Task<string> AuthenticateAsync(string email, string password)
     {
         // Verificar si el usuario existe en la base de datos
         var user = await _context.Usuarios
-            .SingleOrDefaultAsync(u => u.Email == email && u.Password == password);
+            .SingleOrDefaultAsync(u => u.Email == email);
 
         if (user == null)
         {
-            // Retornar null si el usuario no existe o las credenciales son incorrectas
+            Console.WriteLine("Error: Usuario no encontrado.");
             return null;
         }
 
-        // Si el usuario existe, generar el token JWT
+        // Verificar la contraseña hasheada
+        var passwordHasher = new PasswordHasher<Usuario>();
+        var resultado = passwordHasher.VerifyHashedPassword(user, user.Password, password);
+
+        if (resultado != PasswordVerificationResult.Success)
+        {
+            Console.WriteLine("Error: La contraseña es incorrecta.");
+            return null;
+        }
+
+        // Generar el token JWT
         var jwtSettings = _configuration.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email)
-        };
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email)
+    };
 
         var token = new JwtSecurityToken(
             issuer: jwtSettings["Issuer"],
@@ -48,6 +59,8 @@ public class AuthService
             signingCredentials: creds
         );
 
+        Console.WriteLine("Token generado exitosamente.");
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 }

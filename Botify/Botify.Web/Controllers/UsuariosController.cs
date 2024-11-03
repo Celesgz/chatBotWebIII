@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Botify.Logica;
 using Botify.Data.EF;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Spotify.Web.Controllers
 {
@@ -12,11 +16,88 @@ namespace API.Spotify.Web.Controllers
     {
         private readonly AuthService _authService;
         private readonly IUsuariosLogica _usuariosLogica;
+        private readonly PasswordHasher<Usuario> _passwordHasher = new PasswordHasher<Usuario>();
 
         public UsuariosController(AuthService authService, IUsuariosLogica usuariosLogica)
         {
             _authService = authService;
             _usuariosLogica = usuariosLogica;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> IniciarSesion(Usuario usuario)
+        {
+            var usuarioDb = await _usuariosLogica.BuscarUsuarioPorEmail(usuario.Email);
+
+            if (usuarioDb != null)
+            {
+                // Verificar la contraseña hasheada
+                var resultado = _passwordHasher.VerifyHashedPassword(usuarioDb, usuarioDb.Password, usuario.Password);
+
+                if (resultado == PasswordVerificationResult.Success)
+                {
+                    var token = await _authService.AuthenticateAsync(usuario.Email, usuario.Password);
+
+                    if (token == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
+                        return View(usuario);
+                    }
+
+                    // Configurar la cookie con el token
+                    Response.Cookies.Append("AuthToken", token, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Expires = DateTimeOffset.Now.AddMinutes(60)
+                    });
+
+                    return RedirectToAction("Chat", "Chat");
+                }
+            }
+
+            ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
+            return View(usuario);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Registrarse(Usuario usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                Usuario? encontrado = await _usuariosLogica.BuscarUsuarioPorEmail(usuario.Email);
+
+                if (encontrado == null)
+                {
+                    try
+                    {
+                        await _usuariosLogica.AgregarUsuario(usuario);
+                        ViewBag.Message = "Usuario registrado. Ahora podés iniciar sesión";
+                    }
+                    catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2627)
+                    {
+                        if (sqlEx.Message.Contains("UQ_Usuario_Nombre"))
+                        {
+                            ModelState.AddModelError("Nombre", "El nombre de usuario ya existe. Por favor, elegí otro.");
+                        }
+                        else if (sqlEx.Message.Contains("UQ_Usuario_Email"))
+                        {
+                            ViewBag.Message = "El e-mail ya está registrado. ¿Querés iniciar sesión?";
+                            ModelState.AddModelError("Email", "El e-mail ya está registrado");
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ModelState.AddModelError("", "Ocurrió un error inesperado. Intenta de nuevo.");
+                    }
+                }
+                else
+                {
+                    ViewBag.Message = "El usuario ya existe, ¿querés iniciar sesión?";
+                }
+            }
+
+            return View(usuario);
         }
 
         [HttpGet]
@@ -25,41 +106,13 @@ namespace API.Spotify.Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> IniciarSesion(Usuario usuario)
-        {
-            UsuarioModelView model = new UsuarioModelView
-            {
-                Email = usuario.Email,
-                Password = usuario.Password
-            };
-
-            // Llamar al servicio de autenticación para validar credenciales y generar token
-            var token = await _authService.AuthenticateAsync(model.Email, model.Password);
-
-            if (token == null)
-            {
-                ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
-                return View(usuario); // Puedes redirigir a una vista de error o mostrar el error en la vista actual
-            }
-
-            // Configurar la cookie con el token
-            Response.Cookies.Append("AuthToken", token, new CookieOptions
-            {
-                HttpOnly = true,
-                //Secure = true,
-                //SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.Now.AddMinutes(60)
-            });
-
-            return RedirectToAction("Chat", "Chat");
-        }
         [HttpGet]
-        //[Authorize(AuthenticationSchemes = "CookieAuth")]
-        public IActionResult IngresoOk()
+        public IActionResult Registrarse()
         {
             return View();
         }
     }
 }
+
+
 

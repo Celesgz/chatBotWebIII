@@ -1,19 +1,34 @@
-﻿@{
-    @model Botify.Data.EF.Usuario;
-}
+﻿@model Botify.Data.EF.Usuario;
+
 <h3>Iniciá sesión</h3>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    var firstError = ViewData.ModelState.Values
+        .SelectMany(v => v.Errors)
+        .FirstOrDefault();
+
+    if (firstError != null)
+    {
+        <div class="alert alert-danger">
+            @firstError.ErrorMessage
+        </div>
+    }
+}
+
 <form asp-action="IniciarSesion" asp-controller="Usuarios" method="post">
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
-
     </div>
     <div class="form-group">
         <label asp-for="Password"></label>
         <input type="password" asp-for="Password" class="form-control" />
         <span asp-validation-for="Password" class="text-danger"></span>
-
     </div>
     <button type="submit" class="btn btn-primary">Ingresar</button>
 </form>
+
+
+
