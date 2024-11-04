@@ -54,7 +54,6 @@ public class BotLogica : IBotLogica
 
     public async Task<string> ObtenerRecomendaciones(string mood)
     {
-        // Busca la clave (estado de ánimo) y el valor (género) correspondientes en el diccionario
         var moodGenrePair = MoodToGenreMap.FirstOrDefault(entry => mood.Contains(entry.Key, StringComparison.OrdinalIgnoreCase));
         var genre = moodGenrePair.Value;
         var moodKey = moodGenrePair.Key;
@@ -75,10 +74,8 @@ public class BotLogica : IBotLogica
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
 
-            // Deserializar la respuesta
             var recommendationResponse = JsonSerializer.Deserialize<RecommendationResponse>(content, options);
 
-            // Formatear la respuesta
             var formattedRecommendations = new StringBuilder();
 
             formattedRecommendations.AppendLine($" ♬⋆.˚ Recomendaciones para el estado de ánimo: {char.ToUpper(moodKey[0]) + moodKey.Substring(1)} ♬⋆.˚ ");
@@ -87,11 +84,9 @@ public class BotLogica : IBotLogica
             {
                 var artistNames = string.Join(", ", track.Artists.Select(a => a.Name));
                 var albumImageUrl = track.Album.Images.FirstOrDefault()?.Url ?? "Imagen no disponible";
-                //formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify}) ![Portada]({albumImageUrl})\n");
                 formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify})\n\n <img src=\"{albumImageUrl}\" class=\"portada\" />\n\n");
 
             }
-
             return formattedRecommendations.ToString();
         }
         else

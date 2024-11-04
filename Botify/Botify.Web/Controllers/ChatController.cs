@@ -1,6 +1,9 @@
 ﻿using Botify.Logica;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Botify.Web.Controllers;
+
+[Authorize]
 public class ChatController : Controller
 {
     private readonly IBotLogica _botLogica;
@@ -10,6 +13,7 @@ public class ChatController : Controller
         _botLogica = botLogica;
     }
 
+    [Authorize]
     [HttpGet]
     public IActionResult Chat()
     {
