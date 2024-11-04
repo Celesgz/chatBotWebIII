@@ -27,26 +27,45 @@
         (async function () {
             const userID = '2';
             const userName = '1';
-            const locale = 'en-US';
-        const directLine = window.WebChat.createDirectLine({
+            const locale = 'es';
+            const directLine = window.WebChat.createDirectLine({
+                domain: 'http://localhost:55654/v3/directline', // Puerto de bot emulator
+                webSocket: false
+            });
 
-            domain: 'http://localhost:61973/v3/directline', //Puerto de bot emulator
-            webSocket: false
-        });
-            window.WebChat.renderWebChat(
-                {
-                    directLine: directLine,
-                    userID: userID,
-                    username: userName,
-                    locale: locale,
-                    styleOptions: {
-                        botAvatarInitials: 'Botify',
-                        userAvatarInitials: 'YO',
-                        backgroundColor: '#F8F8F8',
-                    }
+            // Middleware para aplicar la animación a los mensajes del bot
+            const botMessageMiddleware = () => (next) => (card) => {
+                if (card.activity.from.role === 'bot') {
+                    setTimeout(() => {
+                        const botMessages = document.querySelectorAll('.webchat__stacked-layout__message');
+                        const lastBotMessage = botMessages[botMessages.length - 1];
+                        if (lastBotMessage) {
+                            lastBotMessage.classList.add('message-from-bot');
+                        }
+                    }, 50); // Breve retraso para que la animación se note
+                }
+                return next(card);
+            };
+
+            window.WebChat.renderWebChat({
+                directLine: directLine,
+                userID: userID,
+                username: userName,
+                locale: locale, 
+                styleOptions: {
+                    botAvatarImage: '/css/bot.png', 
+                    botAvatarInitials: '', 
+                    userAvatarInitials: 'YO',
+                    hideUploadButton: true, 
+                    sendBoxBackground: '#F3E5F5',
+                    sendBoxTextColor: '#080a33',
+                    showTyping: true
                 },
-                document.getElementById('webchat')
-            );
+                localization: {
+                    sendBoxText: 'Escribe tu mensaje aquí...'
+                },
+                activityMiddleware: botMessageMiddleware
+            }, document.getElementById('webchat'));
         })().catch(err => console.error(err));
     </script>
 </body>
