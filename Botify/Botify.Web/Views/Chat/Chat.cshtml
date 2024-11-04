@@ -6,27 +6,21 @@
 }
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/chatBot.css" asp-append-version="true" />
     <title>Bot de Chat</title>
 </head>
-
 <body>
-   
-
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
-            Nuestro Chat
+            Hablá con Botify
         </div>
         <div class="chat-body" id="chatBody">
             <div id="webchat" class="webchat"></div>
         </div>
     </div>
-
-    <!-- Script para integrar el Bot Framework Web Chat -->
     <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
     <script src="~/js/chatBot.js"></script>
     <script>
@@ -34,14 +28,11 @@
             const userID = '2';
             const userName = '1';
             const locale = 'en-US';
-
         const directLine = window.WebChat.createDirectLine({
 
-            domain: 'http://localhost:55654/v3/directline',// Puerto de bot emulator
-
+            domain: 'http://localhost:61973/v3/directline', //Puerto de bot emulator
             webSocket: false
         });
-
             window.WebChat.renderWebChat(
                 {
                     directLine: directLine,
@@ -49,9 +40,9 @@
                     username: userName,
                     locale: locale,
                     styleOptions: {
-                        botAvatarInitials: 'BP',
+                        botAvatarInitials: 'Botify',
                         userAvatarInitials: 'YO',
-                        backgroundColor: '#F8F8F8'
+                        backgroundColor: '#F8F8F8',
                     }
                 },
                 document.getElementById('webchat')

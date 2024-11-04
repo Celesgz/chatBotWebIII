@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Botify.Web.Controllers
 {
@@ -31,24 +32,23 @@ namespace Botify.Web.Controllers
 
             if (usuarioDb != null)
             {
-                // Verificar la contraseña hasheada
                 var resultado = _passwordHasher.VerifyHashedPassword(usuarioDb, usuarioDb.Password, usuario.Password);
 
                 if (resultado == PasswordVerificationResult.Success)
                 {
-                    var token = await _authService.AuthenticateAsync(usuario.Email, usuario.Password);
+                    var token = _authService.GenerarToken(usuario.Email);
 
                     if (token == null)
                     {
-                        ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
+                        ModelState.AddModelError(string.Empty, "Error al generar el token. Inténtelo nuevamente.");
                         return View(usuario);
                     }
 
-                    // Configurar la cookie con el token
                     Response.Cookies.Append("AuthToken", token, new CookieOptions
                     {
-                        HttpOnly = true,
-                        Expires = DateTimeOffset.Now.AddMinutes(60)
+                        HttpOnly = true,             
+                        Secure = true,               
+                        Expires = DateTimeOffset.Now.AddMinutes(60) 
                     });
 
                     return RedirectToAction("Chat", "Chat");
@@ -58,7 +58,6 @@ namespace Botify.Web.Controllers
             ModelState.AddModelError(string.Empty, "Credenciales inválidas o usuario no encontrado.");
             return View(usuario);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Registrarse(Usuario usuario)
@@ -99,6 +98,14 @@ namespace Botify.Web.Controllers
 
             return View(usuario);
         }
+
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("AuthToken");
+
+            return RedirectToAction("Index", "Home");
+        }
+
 
         [HttpGet]
         public IActionResult IniciarSesion()

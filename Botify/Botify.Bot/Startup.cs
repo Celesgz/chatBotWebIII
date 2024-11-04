@@ -20,6 +20,7 @@ namespace Microsoft.BotBuilderSamples
             Configuration = configuration; // Inicializa la propiedad
         }
 
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient().AddControllers().AddNewtonsoftJson(options =>

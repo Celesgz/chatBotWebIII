@@ -10,10 +10,49 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+    };
+
+    // Permitir que el token sea leído desde la cookie
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // Si el encabezado Authorization está vacío, intenta leer el token de la cookie
+            if (string.IsNullOrEmpty(context.Request.Headers["Authorization"]))
+            {
+                var token = context.Request.Cookies["AuthToken"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+            }
+            return Task.CompletedTask;
+        }
+    };
+});
+
+
+
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
- // Registra HttpClient como servicio
 
 builder.Services.AddScoped<IBotLogica, BotLogica>();
 
@@ -27,38 +66,39 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // Configuraci�n de autenticaci�n (JWT y Cookies)
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-    };
-})
-.AddCookie("CookieAuth", options =>
-{
-    options.Cookie.Name = "AuthToken";
-    options.LoginPath = "/Usuarios/IniciarSesion";  // Ruta de login
-    options.Events = new CookieAuthenticationEvents
-    {
-        OnRedirectToLogin = context =>
-        {
-            context.Response.Redirect("/Usuarios/IniciarSesion");
-            return Task.CompletedTask;
-        }
-    };
-});
+//var jwtSettings = builder.Configuration.GetSection("Jwt");
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        ValidIssuer = jwtSettings["Issuer"],
+//        ValidAudience = jwtSettings["Audience"],
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+//    };
+//})
+//.AddCookie("CookieAuth", options =>
+//{
+//    options.Cookie.Name = "AuthToken";
+//    options.LoginPath = "/Usuarios/IniciarSesion";  // Ruta de login
+//    options.Events = new CookieAuthenticationEvents
+//    {
+//        OnRedirectToLogin = context =>
+//        {
+//            context.Response.Redirect("/Usuarios/IniciarSesion");
+//            return Task.CompletedTask;
+//        }
+//    };
+//});
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
