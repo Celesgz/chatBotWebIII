@@ -91,7 +91,7 @@ public class BotLogica : IBotLogica
         }
         else
         {
-            return $"No hay recomendaciones disponibles para el estado de ánimo: {mood}.";
+            return $"No se encontraron recomendaciones. (╥﹏╥)";
         }
     }
 
