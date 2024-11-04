@@ -21,7 +21,3 @@ ADD CONSTRAINT UQ_Usuario_Nombre UNIQUE (Nombre);
 ALTER TABLE Usuario.Usuario
 ADD CONSTRAINT UQ_Usuario_Email UNIQUE (Email);
 GO
-
-ALTER TABLE Usuario.Usuario
-ALTER COLUMN Password VARCHAR(20) NOT NULL; 
-GO

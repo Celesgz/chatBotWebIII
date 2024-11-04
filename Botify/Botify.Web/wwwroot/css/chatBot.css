@@ -1,8 +1,7 @@
-﻿*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -12,18 +11,19 @@ body {
     margin: 0;
     background: url('fondoBot .png') no-repeat center center fixed;
 }
+
 .navbar {
-    display:flex;
-    background-color: #000224; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+    display: flex;
+    background-color: #000224;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .nav-link {
     color: white;
 }
 
-.nav-link:hover {
-        color: #ef85b2; 
+    .nav-link:hover {
+        color: #ef85b2;
     }
 
 /* Estilo general para la ventana de chat */
@@ -55,7 +55,7 @@ body {
     padding: 10px;
     flex: 1;
     overflow-y: auto;
-    max-height:55vh;
+    max-height: 55vh;
 }
 
 /* Estilo de los mensajes dentro de la ventana de chat */
@@ -100,9 +100,22 @@ body {
         text-align: right;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
+
 footer {
     display: none;
 }
+
 .bodyHome {
     background: url(fondoHome.png) no-repeat center center fixed;
 }
+
+.portada {
+    width: 250px !important;
+    height: 250px !important;
+    margin-left: 7.3em;
+}
+
+
+
+
+
