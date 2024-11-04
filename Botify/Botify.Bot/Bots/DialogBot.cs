@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.BotBuilderSamples
 {
-     public class DialogBot<T> : ActivityHandler where T : Dialog
+    public class DialogBot<T> : ActivityHandler where T : Dialog
     {
         protected readonly BotState ConversationState;
         protected readonly Dialog Dialog;
@@ -39,7 +39,7 @@ namespace Microsoft.BotBuilderSamples
         }
 
         // Sobrescribir OnMembersAdded para enviar un saludo al usuario
-         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
+        protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
             foreach (var member in membersAdded)
             {
@@ -52,3 +52,5 @@ namespace Microsoft.BotBuilderSamples
         }
     }
 }
+
+

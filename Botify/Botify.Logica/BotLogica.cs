@@ -80,14 +80,16 @@ public class BotLogica : IBotLogica
 
             // Formatear la respuesta
             var formattedRecommendations = new StringBuilder();
-            // Capitalizar la primera letra de moodKey
-            formattedRecommendations.AppendLine($"Recomendaciones para el estado de ánimo: {char.ToUpper(moodKey[0]) + moodKey.Substring(1)}");
+
+            formattedRecommendations.AppendLine($" ♬⋆.˚ Recomendaciones para el estado de ánimo: {char.ToUpper(moodKey[0]) + moodKey.Substring(1)} ♬⋆.˚ ");
 
             foreach (var track in recommendationResponse.Tracks)
             {
                 var artistNames = string.Join(", ", track.Artists.Select(a => a.Name));
                 var albumImageUrl = track.Album.Images.FirstOrDefault()?.Url ?? "Imagen no disponible";
-                formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify}) ![Portada]({albumImageUrl})\n");
+                //formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify}) ![Portada]({albumImageUrl})\n");
+                formattedRecommendations.AppendLine($"- **{track.Name}** de {artistNames} (Album: {track.Album.Name}) - [Escuchar aquí]({track.ExternalUrls.Spotify})\n\n <img src=\"{albumImageUrl}\" class=\"portada\" />\n\n");
+
             }
 
             return formattedRecommendations.ToString();
@@ -100,42 +102,23 @@ public class BotLogica : IBotLogica
 
 
     private static readonly Dictionary<string, string> MoodToGenreMap = new Dictionary<string, string>
-{
-   { "feliz", "pop" },
-    { "triste", "blues" },
-    { "energético", "dance" },
-    { "relajado", "jazz" },
-    { "romántico", "romance" },
-    { "nostálgico", "soul" },
-    { "furioso", "metal" },
-    { "optimista", "rock" },
-    { "melancólico", "indie" },
-    { "confuso", "electrónica" },
-    { "inspirado", "folk" },
-    { "emocionado", "hip-hop" },
-    { "pensativo", "clásica" },
-    { "aventurero", "reggae" },
-    { "estresado", "ambient" },
-    { "motivador", "funk" },
-    { "misterioso", "trip-hop" },
-    { "enérgico", "house" },
-    { "alegre", "disco" },
-    { "apasionado", "flamenco" },
-    { "solitario", "country" },
-    { "esperanzado", "gospel" },
-    { "impulsivo", "punk" },
-    { "espiritual", "new age" },
-    { "soñador", "synthwave" },
-    { "enérgico", "punk" },
-    { "curioso", "experimental" },
-    { "oscuro", "gothic" },
-    { "misterioso", "trip-hop" },
-    { "intrigado", "chillwave" },
-    { "agradecido", "latin" },
-    { "meloso", "r&b" }
+    {
+        { "feliz", "pop" },
+        { "triste", "blues" },
+        { "energetico", "dance" },
+        { "relajado", "jazz" },
+        { "romantico", "romance" },
+        { "nostalgico", "soul" },
+        { "furioso", "metal" },
+        { "optimista", "rock" },
+        { "melancolico", "indie" },
+        { "inspirado", "folk" },
+        { "emocionado", "hip-hop" },
+        { "aventurero", "reggae" },
+        { "estresado", "ambient" },
+        { "motivador", "funk" },
+    };
 
-    // Agrega más estados y géneros según sea necesario
-};
 
 }
 
