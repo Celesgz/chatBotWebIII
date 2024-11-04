@@ -1,4 +1,6 @@
-﻿* {
+﻿@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Press+Start+2P&display=swap");
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -12,10 +14,19 @@ body {
     background: url('fondoBot .png') no-repeat center center fixed;
 }
 
+
 .navbar {
     display: flex;
     background-color: #000224;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    align-items: center;
+}
+.botify-brand {
+    font-family: "Press Start 2P", system-ui;
+    font-size: 1.1rem;
+    color: white;
+    text-align: center;
+    margin: 0 auto;
 }
 
 .nav-link {
@@ -23,7 +34,7 @@ body {
 }
 
     .nav-link:hover {
-        color: #ef85b2;
+        color: #729cc9;
     }
 
 /* Estilo general para la ventana de chat */
@@ -55,7 +66,7 @@ body {
     padding: 10px;
     flex: 1;
     overflow-y: auto;
-    max-height: 55vh;
+    min-height: 70vh;
 }
 
 /* Estilo de los mensajes dentro de la ventana de chat */
@@ -115,7 +126,34 @@ footer {
     margin-left: 7.3em;
 }
 
+#webchat > * {
+    display: flex;
+    flex-direction: column;
+    height: 70vh; 
+}
 
+.webchat__send-box {
+    position: sticky;
+    bottom: 0;
+    background-color: #F3E5F5; 
+    z-index: 1;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-from-bot {
+    animation: slideUp 1s ease-out;
+}
 
 
 
