@@ -1,8 +1,6 @@
 ﻿@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Press+Start+2P&display=swap");
 
 body {
-    background: url("registro.png") no-repeat center center;
-    background-size: cover;
     color: #fff;
     font-family: Arial, sans-serif;
     height: 100vh;
@@ -10,8 +8,21 @@ body {
     display: flex;
     align-items: center;
 }
-p{
-    color:white;
+
+.bodyRegistro {
+    background: url("registro.png") no-repeat center center;
+    background-size: cover;
+}
+
+.bodyLoguin{
+    background: url("Loguin.png") no-repeat center center;
+    background-size: cover;
+}
+
+
+
+p {
+    color: white;
 }
 .container2 {
     padding: 30px;
@@ -22,6 +33,17 @@ p{
     margin-left: auto;
     margin-right: 20px;
 }
+.container3 {
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 550px;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+
 
 h3 {
     font-size: 28px;
@@ -61,6 +83,7 @@ label {
     font-size: 18px;
     padding: 12px;
     margin-top: 15px;
+    margin-bottom:15px;
 }
 
 .btn-primary:hover {
