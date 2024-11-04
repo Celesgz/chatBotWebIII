@@ -48,9 +48,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
@@ -64,40 +61,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Usuarios/IngresarSesion";
 });
-
-// Configuraci�n de autenticaci�n (JWT y Cookies)
-//var jwtSettings = builder.Configuration.GetSection("Jwt");
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-//{
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuer = true,
-//        ValidateAudience = true,
-//        ValidateLifetime = true,
-//        ValidateIssuerSigningKey = true,
-//        ValidIssuer = jwtSettings["Issuer"],
-//        ValidAudience = jwtSettings["Audience"],
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-//    };
-//})
-//.AddCookie("CookieAuth", options =>
-//{
-//    options.Cookie.Name = "AuthToken";
-//    options.LoginPath = "/Usuarios/IniciarSesion";  // Ruta de login
-//    options.Events = new CookieAuthenticationEvents
-//    {
-//        OnRedirectToLogin = context =>
-//        {
-//            context.Response.Redirect("/Usuarios/IniciarSesion");
-//            return Task.CompletedTask;
-//        }
-//    };
-//});
 
 builder.Services.AddAuthorization();
 

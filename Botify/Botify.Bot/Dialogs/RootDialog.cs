@@ -62,7 +62,13 @@ namespace Microsoft.BotBuilderSamples
                 "- Romantico\n" +
                 "- Nostalgico\n" +
                 "- Furioso\n" +
-                "- Motivador\n")              
+                "- Optimista\n" +
+                "- Melancolico\n" +
+                "- Inspirado\n" +
+                "- Emocionado\n" +
+                "- Aventurero\n" +
+                "- Estresado\n" +
+                "- Motivador\n")
 
             }, cancellationToken);
         }

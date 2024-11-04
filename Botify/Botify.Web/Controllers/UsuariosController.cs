@@ -71,7 +71,7 @@ namespace Botify.Web.Controllers
                     try
                     {
                         await _usuariosLogica.AgregarUsuario(usuario);
-                        ViewBag.Message = "Usuario registrado. Ahora podés iniciar sesión";
+                        ViewBag.Message = "Usuario registrado.";
                     }
                     catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2627)
                     {
@@ -92,7 +92,7 @@ namespace Botify.Web.Controllers
                 }
                 else
                 {
-                    ViewBag.Message = "El usuario ya existe, ¿querés iniciar sesión?";
+                    ViewBag.Message = "El usuario ya existe.";
                 }
             }
 
